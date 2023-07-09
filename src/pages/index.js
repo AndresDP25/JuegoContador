@@ -11,6 +11,7 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const [count, setCount] = useState(0);
   const [score, setScore] = useState(0);
+  const [isLastSecond, setIsLastSecond] = useState(false);
   const intervalRef = useRef(null);
 
   const handleClick = () => {
@@ -18,9 +19,10 @@ export default function Home() {
       setCount(prevCount => prevCount + 1);
     }
   };
-  
+
   const handleStart = () => {
     setIsRunning(true);
+    setIsLastSecond(false)
     setTime(0);
     setCount(0);
   }
@@ -32,10 +34,20 @@ export default function Home() {
       }, 100);
     }
 
+    if (time >= 4000) {
+      setIsLastSecond(true);
+    } else if (time === 5000) {
+      setIsLastSecond(false);
+      setIsRunning(false);
+      if (count > score) {
+        setScore(count);
+      }
+    }
+
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [isRunning, time]);
+  }, [isRunning, time, count, score]);
 
   useEffect(() => {
     if (time === 5000) {
@@ -46,7 +58,7 @@ export default function Home() {
     }
   }, [time, count, score]);
 
-  
+
   return (
     <>
       <Head>
@@ -59,11 +71,13 @@ export default function Home() {
         <h1>Juego Contador</h1>
         <div style={{ display: 'flex' }}>
           <div style={{ marginRight: '150px' }}>
-            <h1>Tiempo: {Math.floor(time / 1000)}:{(time % 1000).toString().padStart(3, '0').substring(0,2)}</h1>
+            <h1 style={{ color: isLastSecond ? 'red' : 'inherit' }}>
+              Tiempo: {Math.floor(time / 1000)}:{(time % 1000).toString().padStart(3, '0').substring(0, 2)}
+            </h1>
             <h1>Clicks: {count}</h1>
           </div>
           <div>
-            <h1>Mejor puntaje: {score}</h1>
+            <h1> Puntaje máximo: {score}</h1>
           </div>
         </div>
         <Button onClick={handleStart} disabled={isRunning} size="large" variant="contained" sx={{ width: '150px' }}>
@@ -74,5 +88,5 @@ export default function Home() {
         </Button>
       </main>
     </>
-  )
+  );
 }
