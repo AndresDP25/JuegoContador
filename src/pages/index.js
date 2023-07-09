@@ -9,9 +9,11 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
   const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [isGaming, setIsGaming] = useState(false);
   const [count, setCount] = useState(0);
   const [score, setScore] = useState(0);
   const [isLastSecond, setIsLastSecond] = useState(false);
+  const [currentTitle, setCurrentTitle] = useState(null);
   const intervalRef = useRef(null);
 
   const handleClick = () => {
@@ -22,13 +24,28 @@ export default function Home() {
 
   const handleStart = () => {
     setIsRunning(true);
-    setIsLastSecond(false)
+    setIsLastSecond(false);
     setTime(0);
     setCount(0);
-  }
+
+    setCurrentTitle('Preparados');
+    setTimeout(() => {
+      setCurrentTitle('Listos');
+      setTimeout(() => {
+        setCurrentTitle('¡YA!');
+        setTimeout(() => {
+          setCurrentTitle(null);
+          setIsGaming(true);
+          setTimeout(() => {
+            setIsRunning(true);
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 1000);
+  };
 
   useEffect(() => {
-    if (isRunning && time < 5000) {
+    if (isRunning && time < 5000 && currentTitle === null) {
       intervalRef.current = setInterval(() => {
         setTime(prevTime => prevTime + 100);
       }, 100);
@@ -47,11 +64,12 @@ export default function Home() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, [isRunning, time, count, score]);
+  }, [isRunning, time, count, score, currentTitle]);
 
   useEffect(() => {
     if (time === 5000) {
       setIsRunning(false);
+      setIsGaming(false);
       if (count > score) {
         setScore(count);
       }
@@ -80,10 +98,11 @@ export default function Home() {
             <h1> Puntaje máximo: {score}</h1>
           </div>
         </div>
+        {currentTitle && <h1>{currentTitle}</h1>}
         <Button onClick={handleStart} disabled={isRunning} size="large" variant="contained" sx={{ width: '150px' }}>
           Iniciar Juego
         </Button>
-        <Button onClick={handleClick} disabled={!isRunning} size="large" variant="contained" sx={{ width: '150px' }}>
+        <Button onClick={handleClick} disabled={!isGaming} size="large" variant="contained" sx={{ width: '150px' }}>
           Clickear Aquí
         </Button>
       </main>
