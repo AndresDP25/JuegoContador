@@ -7,6 +7,16 @@
   min-height: 100vh;
 }
 
+.mobile{
+  flex-direction: row;
+}
+
+@media (max-width: 700px) {
+  .mobile {
+    flex-direction: column-reverse;
+  }
+}
+
 .description {
   display: inherit;
   justify-content: inherit;

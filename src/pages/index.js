@@ -86,16 +86,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <h1>Juego Contador</h1>
-        <div style={{ display: 'flex' }}>
+        <h1 style={{ minWidth: '260px'}}>Juego Contador</h1>
+        <div className={styles.mobile} style={{ display: 'flex', marginLeft:'60px' }}>
           <div style={{ marginRight: '150px' }}>
-            <h1 style={{ color: isLastSecond ? 'red' : 'inherit' }}>
+            <h1 style={{ minWidth: '220px', color: isLastSecond ? 'red' : 'inherit' }}>
               Tiempo: {Math.floor(time / 1000)}:{(time % 1000).toString().padStart(3, '0').substring(0, 2)}
             </h1>
             <h1>Clicks: {count}</h1>
           </div>
           <div>
-            <h1> Puntaje máximo: {score}</h1>
+            <h1 style={{ marginBottom: '50px' }}> Puntaje máximo: {score}</h1>
           </div>
         </div>
         {currentTitle && <h1>{currentTitle}</h1>}
